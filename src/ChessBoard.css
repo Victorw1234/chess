@@ -5,4 +5,11 @@
     grid-template-columns:repeat(8,1fr);
     grid-template-rows:repeat(8,1fr);
     border: 2px solid black;
+    /*transform: scale(1, -1);*/
 }
+
+.Square {
+    /*transform: scale(1, -1);*/
+}
+
+
