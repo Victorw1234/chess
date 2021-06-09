@@ -1,4 +1,4 @@
-import React,{useState,useEffect} from 'react'
+import React,{useState} from 'react'
 import Square from './Square'
 import Knight from './Knight'
 import Pawn from './Pawn'
@@ -7,28 +7,33 @@ import Rook from './Rook'
 import './ChessBoard.css'
 import Queen from './Queen'
 import King from './King'
+import ChessFunctions from './ChessFunctions'
 
 export default function ChessBoard() {
     const [board,setBoard] = useState([
-        ['br','bh','bb','bq','bk','bb','bh','br'],
+        /*['br','bh','bb','bq','bk','bb','bh','br'],
         ['bp','bp','bp','bp','bp','bp','bp','bp'],
         ['','','','','','','',''],
         ['','','','','','','',''],
-        ['','','wk','','','','',''],
+        ['','','','','','','',''],
         ['','','','','','','',''],
         ['wp','wp','wp','wp','wp','wp','wp','wp'],
-        ['wr','wh','wb','wq','wk','wb','wh','wr']
+        ['wr','wh','wb','wq','wk','wb','wh','wr']*/
+        ['','','','','','','','bk'],
+        ['','','','','','','',''],
+        ['','','','','','bq','',''],
+        ['','','','','','','br',''],
+        ['','','','wk','','','','wr'],
+        ['','','','','','','',''],
+        ['','','','','','','',''],
+        ['','','','','','','','']
+
     ])
 
     const [highlightedPiece,setHighlightedPiece] = useState({x:null,y:null});
 
     const [toMove,setToMove] = useState('w')
     
-    useEffect(() => {
-        console.log("is king checked?")
-        console.log(King.isKingChecked(board,2,4));
-        
-    }, [])
     //Checks the values of the objects, instead of reference(like include would do)
     // Only works with x,y objs
     function checkIfLegalMove(legalMoves,move) {
@@ -67,60 +72,84 @@ export default function ChessBoard() {
         else if (highlightedPiece.x !== x || highlightedPiece.y !== y) {
             var piece = board[highlightedPiece.y][highlightedPiece.x].charAt(1);
             var color = board[highlightedPiece.y][highlightedPiece.x].charAt(0);
-            console.log(piece)
+            console.log("Colorearly:" + color)
+            var moveWasMade = false;
             switch (piece) {
                 case 'h':
                     var legalMoves = Knight.legalMoves(board,highlightedPiece.x,highlightedPiece.y);
-                    if (checkIfLegalMove(legalMoves,{x,y})) {
+                    if (checkIfLegalMove(legalMoves,{x,y}) && !King.movePutsKingInCheck(board,highlightedPiece.x,highlightedPiece.y,x,y)) {
                         moveHighlightedPiece(x,y);
                         setHighlightedPiece({x:null,y:null})
-                        color === 'w' ? setToMove('b') : setToMove('w');
+                        moveWasMade = true;
                     }
                     break;
                 case 'p':
                     var legalMoves = Pawn.legalMoves(board,highlightedPiece.x,highlightedPiece.y);
-                    if (checkIfLegalMove(legalMoves,{x,y})) {
+                    if (checkIfLegalMove(legalMoves,{x,y}) && !King.movePutsKingInCheck(board,highlightedPiece.x,highlightedPiece.y,x,y)) {
                         moveHighlightedPiece(x,y);
                         setHighlightedPiece({x:null,y:null})
-                        color === 'w' ? setToMove('b') : setToMove('w');
+                        moveWasMade = true;
                     }
                     break;
                 case 'b':
                     var legalMoves = Bishop.legalMoves(board,highlightedPiece.x,highlightedPiece.y);
-                    if (checkIfLegalMove(legalMoves,{x,y})) {
+                    if (checkIfLegalMove(legalMoves,{x,y}) && !King.movePutsKingInCheck(board,highlightedPiece.x,highlightedPiece.y,x,y)) {
                         moveHighlightedPiece(x,y);
                         setHighlightedPiece({x:null,y:null})
-                        color === 'w' ? setToMove('b') : setToMove('w');
+                        moveWasMade = true;
                     }
                     break;
                 case 'q':
                     var legalMoves = Queen.legalMoves(board,highlightedPiece.x,highlightedPiece.y);
-                    if (checkIfLegalMove(legalMoves,{x,y})) {
+                    if (checkIfLegalMove(legalMoves,{x,y}) && !King.movePutsKingInCheck(board,highlightedPiece.x,highlightedPiece.y,x,y)) {
                         moveHighlightedPiece(x,y);
                         setHighlightedPiece({x:null,y:null})
-                        color === 'w' ? setToMove('b') : setToMove('w');
+                        moveWasMade = true;
                     }
                     break;
                 case 'r':
                     var legalMoves = Rook.legalMoves(board,highlightedPiece.x,highlightedPiece.y);
-                    if (checkIfLegalMove(legalMoves,{x,y})) {
+                    if (checkIfLegalMove(legalMoves,{x,y}) && !King.movePutsKingInCheck(board,highlightedPiece.x,highlightedPiece.y,x,y)) {
                         moveHighlightedPiece(x,y);
                         setHighlightedPiece({x:null,y:null})
-                        color === 'w' ? setToMove('b') : setToMove('w');
+                        moveWasMade = true;
                     }
                     break;
                 case 'k':
                     var legalMoves = King.legalMoves(board,highlightedPiece.x,highlightedPiece.y);
                     console.log(legalMoves)
-                    if (checkIfLegalMove(legalMoves,{x,y})) {
+                    if (checkIfLegalMove(legalMoves,{x,y}) && !King.movePutsKingInCheck(board,highlightedPiece.x,highlightedPiece.y,x,y)) {
                         moveHighlightedPiece(x,y);
                         setHighlightedPiece({x:null,y:null})
-                        color === 'w' ? setToMove('b') : setToMove('w');
+                        moveWasMade = true;
                     }
                     break;
                 default:
-
+                    console.log("default");
+                    break;
             }
+
+            console.log("moveWasMade: " + moveWasMade)
+            // check for checkmate:
+            if (moveWasMade) {
+                console.log("Color:" + color)
+                if (color === 'w') {
+                    color = 'b';
+                    setToMove('b');
+                }
+                else {
+                    color = 'w'
+                    setToMove('w')
+                }
+                console.log("Checking if "+color + " got checkmated")
+                if (King.isCheckMated(board,color)) {
+                    console.log(`${color} just got checkmated`);
+                }
+                else {
+                    console.log('no mate')
+                }
+            }
+
         }
 
 
