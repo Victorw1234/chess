@@ -33,6 +33,8 @@ export default function ChessBoard() {
     const [highlightedPiece,setHighlightedPiece] = useState({x:null,y:null});
 
     const [toMove,setToMove] = useState('w')
+
+    const [yourColor,setYourColor] = useState('b')
     
     //Checks the values of the objects, instead of reference(like include would do)
     // Only works with x,y objs
@@ -130,8 +132,8 @@ export default function ChessBoard() {
             }
 
             console.log("moveWasMade: " + moveWasMade)
-            // check for checkmate:
             if (moveWasMade) {
+                // shift color 
                 console.log("Color:" + color)
                 if (color === 'w') {
                     color = 'b';
@@ -141,6 +143,7 @@ export default function ChessBoard() {
                     color = 'w'
                     setToMove('w')
                 }
+                // checkmate check
                 console.log("Checking if "+color + " got checkmated")
                 if (King.isCheckMated(board,color)) {
                     console.log(`${color} just got checkmated`);
@@ -161,13 +164,15 @@ export default function ChessBoard() {
 
     var boardJSX = board.map((board,rowIndex) => {
         return board.map((square,columnIndex) => {
-            var color = "white";
-            (rowIndex + columnIndex) % 2 === 1 ? color = "black" : color = "white"
+            var styles = {};
+            (rowIndex + columnIndex) % 2 === 1 ? styles.backgroundColor = "black" : styles.backgroundColor = "white"
+
             if (highlightedPiece.y === rowIndex && highlightedPiece.x === columnIndex)
-                color = "red";
+                styles.backgroundColor = "red";
+
             return <Square
                          key={rowIndex+columnIndex} 
-                         color={color}  
+                         styles={styles}  
                          piece={square}
                          clickFunction={handleClick}
                          x={columnIndex}
@@ -176,8 +181,9 @@ export default function ChessBoard() {
         })
     });
 
+
     return (
-        <div className="ChessBoard">
+        <div id={yourColor} className="ChessBoard">
             {boardJSX}
         </div>
     )
