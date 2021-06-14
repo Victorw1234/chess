@@ -60,8 +60,25 @@ class King {
                 }
             }
         }
+        // check if there is a check from a king 
+        // (this can't happen ingame, but it is used to detect checkmate anyhow)
+        for (var i = -1 ; i < 2 ; i++) {
+            for (var j = -1 ; j < 2 ; j++) {
+                if (x+i >= 0 && x+i <= 7 && y + j <= 7 && y+j >= 0) {
+                    if (color ==='w') {
+                        if (board[y+j][x+i] === 'bk') {
+                            return true;
+                        }
+                    }
+                    else if (color === 'b') {
+                        if (board[y+j][x+i] === 'wk') {
+                            return true;
+                        }
+                    }
+                }
+            }
+        }
         return false;
-
     }
 
     static movePutsKingInCheck(board,x,y,x1,y1) {
