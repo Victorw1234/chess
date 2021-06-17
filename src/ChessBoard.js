@@ -7,7 +7,6 @@ import Rook from './Rook'
 import './ChessBoard.css'
 import Queen from './Queen'
 import King from './King'
-import ChessFunctions from './ChessFunctions'
 import { HubConnectionBuilder } from '@microsoft/signalr';
 
 
@@ -33,7 +32,7 @@ export default function ChessBoard(props) {
 
     const [yourColor,setYourColor] = useState(props.color)
 
-    const [checkmated,setCheckmated] = useState('')
+    const [checkmated,setCheckmated] = useState(null)
     
     useEffect(() => {
         const newConnection = new HubConnectionBuilder()
@@ -61,9 +60,16 @@ export default function ChessBoard(props) {
             })
             .catch(e => console.log("connection failed"))
         }
-    },[connection])
+    },[connection,applyMove,props.gameId,props.name])
 
-
+    function getNameFromColor(color) {
+        if (color === yourColor) {
+            return props.name;
+        }
+        else {
+            return props.otherPlayerName;
+        }
+    }
 
     function applyMove(move) {
         console.log("Running apply move")
@@ -76,7 +82,7 @@ export default function ChessBoard(props) {
 
         if (King.isCheckMated(board,yourColor)) {
             console.log(`${yourColor} just got checkmated`);
-            setCheckmated(yourColor)
+            setCheckmated(getNameFromColor(yourColor))
         }
         else {
             setToMove(yourColor)
@@ -147,37 +153,37 @@ export default function ChessBoard(props) {
                     }
                     break;
                 case 'p':
-                    var legalMoves = Pawn.legalMoves(board,highlightedPiece.x,highlightedPiece.y);
-                    if (checkIfLegalMove(legalMoves,{x,y}) && !King.movePutsKingInCheck(board,highlightedPiece.x,highlightedPiece.y,x,y)) {
+                    var legalMoves1 = Pawn.legalMoves(board,highlightedPiece.x,highlightedPiece.y);
+                    if (checkIfLegalMove(legalMoves1,{x,y}) && !King.movePutsKingInCheck(board,highlightedPiece.x,highlightedPiece.y,x,y)) {
                         moveHighlightedPiece(x,y);
                         moveWasMade = true;
                     }
                     break;
                 case 'b':
-                    var legalMoves = Bishop.legalMoves(board,highlightedPiece.x,highlightedPiece.y);
-                    if (checkIfLegalMove(legalMoves,{x,y}) && !King.movePutsKingInCheck(board,highlightedPiece.x,highlightedPiece.y,x,y)) {
+                    var legalMoves2 = Bishop.legalMoves(board,highlightedPiece.x,highlightedPiece.y);
+                    if (checkIfLegalMove(legalMoves2,{x,y}) && !King.movePutsKingInCheck(board,highlightedPiece.x,highlightedPiece.y,x,y)) {
                         moveHighlightedPiece(x,y);
                         moveWasMade = true;
                     }
                     break;
                 case 'q':
-                    var legalMoves = Queen.legalMoves(board,highlightedPiece.x,highlightedPiece.y);
-                    if (checkIfLegalMove(legalMoves,{x,y}) && !King.movePutsKingInCheck(board,highlightedPiece.x,highlightedPiece.y,x,y)) {
+                    var legalMoves3 = Queen.legalMoves(board,highlightedPiece.x,highlightedPiece.y);
+                    if (checkIfLegalMove(legalMoves3,{x,y}) && !King.movePutsKingInCheck(board,highlightedPiece.x,highlightedPiece.y,x,y)) {
                         moveHighlightedPiece(x,y);
                         moveWasMade = true;
                     }
                     break;
                 case 'r':
-                    var legalMoves = Rook.legalMoves(board,highlightedPiece.x,highlightedPiece.y);
-                    if (checkIfLegalMove(legalMoves,{x,y}) && !King.movePutsKingInCheck(board,highlightedPiece.x,highlightedPiece.y,x,y)) {
+                    var legalMoves4 = Rook.legalMoves(board,highlightedPiece.x,highlightedPiece.y);
+                    if (checkIfLegalMove(legalMoves4,{x,y}) && !King.movePutsKingInCheck(board,highlightedPiece.x,highlightedPiece.y,x,y)) {
                         moveHighlightedPiece(x,y);
                         moveWasMade = true;
                     }
                     break;
                 case 'k':
-                    var legalMoves = King.legalMoves(board,highlightedPiece.x,highlightedPiece.y);
+                    var legalMoves5 = King.legalMoves(board,highlightedPiece.x,highlightedPiece.y);
                     console.log(legalMoves)
-                    if (checkIfLegalMove(legalMoves,{x,y}) && !King.movePutsKingInCheck(board,highlightedPiece.x,highlightedPiece.y,x,y)) {
+                    if (checkIfLegalMove(legalMoves5,{x,y}) && !King.movePutsKingInCheck(board,highlightedPiece.x,highlightedPiece.y,x,y)) {
                         moveHighlightedPiece(x,y);
                         moveWasMade = true;
                     }
@@ -210,7 +216,8 @@ export default function ChessBoard(props) {
                 console.log("Checking if "+color + " got checkmated")
                 if (King.isCheckMated(board,color)) {
                     console.log(`${color} just got checkmated`);
-                    setCheckmated(color)
+                    console.log(getNameFromColor(color))
+                    setCheckmated(getNameFromColor(color))
                 }
                 else {
                     console.log('no mate')
@@ -240,15 +247,18 @@ export default function ChessBoard(props) {
 
 
     return (
-        <>
-            <div>{props.otherPlayerName}</div>
+        <div id="chess">
+            <div id="otherPlayer">
+                {checkmated === props.otherPlayerName ? <span>{props.otherPlayerName} just got checkmated!</span> : <>{props.otherPlayerName}</>}
+            </div>
             <div id={yourColor} className="ChessBoard">
                 {boardJSX}
             </div>
-            <div>{props.name}</div>
+            <div id="player">
+                
+                {checkmated === props.name ? <span>{props.name} just got checkmated!</span> : <>{props.name}</>}
+            </div>
             
-            
-            {checkmated !== '' ? <h1>{checkmated} just got checkmated!</h1> : <span></span>}
-        </>
+        </div>
     )
 }

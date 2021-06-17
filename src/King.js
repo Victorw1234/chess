@@ -29,26 +29,26 @@ class King {
                             }
                         }
                         else if (board[i][j].charAt(1) === 'p') {
-                            var list = Pawn.legalMoves(board,j,i);
-                            if (this.checkIfLegalMove(list,{x,y})) {
+                            var list1 = Pawn.legalMoves(board,j,i);
+                            if (this.checkIfLegalMove(list1,{x,y})) {
                                 return true;
                             }
                         }
                         else if (board[i][j].charAt(1) === 'r') {
-                            var list = Rook.legalMoves(board,j,i);
-                            if (this.checkIfLegalMove(list,{x,y})) {
+                            var list2 = Rook.legalMoves(board,j,i);
+                            if (this.checkIfLegalMove(list2,{x,y})) {
                                 return true;
                             }
                         }
                         else if (board[i][j].charAt(1) === 'b') {
-                            var list = Bishop.legalMoves(board,j,i);
-                            if (this.checkIfLegalMove(list,{x,y})) {
+                            var list3 = Bishop.legalMoves(board,j,i);
+                            if (this.checkIfLegalMove(list3,{x,y})) {
                                 return true;
                             }
                         }
                         else if (board[i][j].charAt(1) === 'h') {
-                            var list = Knight.legalMoves(board,j,i);
-                            if (this.checkIfLegalMove(list,{x,y})) {
+                            var list4 = Knight.legalMoves(board,j,i);
+                            if (this.checkIfLegalMove(list4,{x,y})) {
                                 return true;
                             }
                         }
@@ -90,7 +90,6 @@ class King {
                 newBoard[i][j] = board[i][j]
             }
         }
-        var color = newBoard[y][x].charAt(0);
         newBoard[y1][x1] = newBoard[y][x]
         newBoard[y][x] = ''
         var color = newBoard[y1][x1].charAt(0);
@@ -111,45 +110,45 @@ class King {
         var queen = ChessFunctions.findPieceOnBoard(board,color+'q')
 
         for (var i = 0 ; i < pawns.length ; i++) {
-            var legalMoves = Pawn.legalMoves(board,pawns[i].x,pawns[i].y);
-            for (var j = 0 ; j < legalMoves.length ; j++) {
-                if (!King.movePutsKingInCheck(board,pawns[i].x,pawns[i].y,legalMoves[j].x,legalMoves[j].y)) {
+            var pawnLegalMoves = Pawn.legalMoves(board,pawns[i].x,pawns[i].y);
+            for (var j = 0 ; j < pawnLegalMoves.length ; j++) {
+                if (!King.movePutsKingInCheck(board,pawns[i].x,pawns[i].y,pawnLegalMoves[j].x,pawnLegalMoves[j].y)) {
                     return false;
                 }
             }
         }
 
         for (var i = 0 ; i < rooks.length ; i++) {
-            var legalMoves = Rook.legalMoves(board,rooks[i].x,rooks[i].y);
-            for (var j = 0 ; j < legalMoves.length ; j++) {
-                if (!King.movePutsKingInCheck(board,rooks[i].x,rooks[i].y,legalMoves[j].x,legalMoves[j].y)) {
+            var rookLegalMoves = Rook.legalMoves(board,rooks[i].x,rooks[i].y);
+            for (var j = 0 ; j < rookLegalMoves.length ; j++) {
+                if (!King.movePutsKingInCheck(board,rooks[i].x,rooks[i].y,rookLegalMoves[j].x,rookLegalMoves[j].y)) {
                     return false;
                 }
             }
         }
 
         for (var i = 0 ; i < horses.length ; i++) {
-            var legalMoves = Knight.legalMoves(board,horses[i].x,horses[i].y);
-            for (var j = 0 ; j < legalMoves.length ; j++) {
-                if (!King.movePutsKingInCheck(board,horses[i].x,horses[i].y,legalMoves[j].x,legalMoves[j].y)) {
+            var knightLegalMoves = Knight.legalMoves(board,horses[i].x,horses[i].y);
+            for (var j = 0 ; j < knightLegalMoves.length ; j++) {
+                if (!King.movePutsKingInCheck(board,horses[i].x,horses[i].y,knightLegalMoves[j].x,knightLegalMoves[j].y)) {
                     return false;
                 }
             }
         }
 
         for (var i = 0 ; i < bishops.length ; i++) {
-            var legalMoves = Bishop.legalMoves(board,bishops[i].x,bishops[i].y);
-            for (var j = 0 ; j < legalMoves.length ; j++) {
-                if (!King.movePutsKingInCheck(board,bishops[i].x,bishops[i].y,legalMoves[j].x,legalMoves[j].y)) {
+            var bishopLegalMoves = Bishop.legalMoves(board,bishops[i].x,bishops[i].y);
+            for (var j = 0 ; j < bishopLegalMoves.length ; j++) {
+                if (!King.movePutsKingInCheck(board,bishops[i].x,bishops[i].y,bishopLegalMoves[j].x,bishopLegalMoves[j].y)) {
                     return false;
                 }
             }
         }
 
         for (var i = 0 ; i < queen.length ; i++) {
-            var legalMoves = Queen.legalMoves(board,queen[i].x,queen[i].y);
-            for (var j = 0 ; j < legalMoves.length ; j++) {
-                if (!King.movePutsKingInCheck(board,queen[i].x,queen[i].y,legalMoves[j].x,legalMoves[j].y)) {
+            var queenLegalMoves = Queen.legalMoves(board,queen[i].x,queen[i].y);
+            for (var j = 0 ; j < queenLegalMoves.length ; j++) {
+                if (!King.movePutsKingInCheck(board,queen[i].x,queen[i].y,queenLegalMoves[j].x,queenLegalMoves[j].y)) {
                     return false;
                 }
             }
@@ -177,14 +176,14 @@ class King {
                     if (board[y+j][x+i] !== '') {
                         if (board[y+j][x+i].charAt(0) !== color) {
                             
-                            if (this.movePutsKingInCheck(board,x,y,x+i,y+j) == false) {
+                            if (this.movePutsKingInCheck(board,x,y,x+i,y+j) === false) {
                                 legalMoves.push({x:x+i,y:y+j})  
                             }
                              
                         }
                     }
                     else {
-                        if (this.movePutsKingInCheck(board,x,y,x+i,y+j) == false) {
+                        if (this.movePutsKingInCheck(board,x,y,x+i,y+j) === false) {
                             legalMoves.push({x:x+i,y:y+j})
                         }
                     }

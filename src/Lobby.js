@@ -30,7 +30,7 @@ export default function Lobby(props) {
 
 
         setConnection(newConnection);
-    },[]);
+    },[props.match.params.id]);
 
     useEffect(() => {
         if (connection) {
@@ -96,24 +96,25 @@ export default function Lobby(props) {
                                            otherPlayerName={otherPlayerName}
                                            color={color}/> :
         formSent === false ? 
-        <div>
-            <span>enter name:</span>
+        <div id="nameInput">
+            <h2>Enter name:</h2>
             <input value={name} onChange={nameInputField} type="text">
 
             </input>
-            <input type="submit" onClick={sendForm} value="enter"/>
+            <input type="submit" onClick={sendForm} value="Enter"/>
         </div>
         :
             props.match.params.id === undefined ? 
-            <div>
-                your name: {name} <br/>
-                Invite a friend! {url}/{gameId} <br/>
-                <button onClick={startGame}>Start Game!</button> <br/>
+            <div id="lobbyOwner">
+                <h2>your name: {name}</h2>
+                <h3>Invite a friend!</h3>
+                <input id="url" type="text" value={url+"/" + gameId}/><br/>
+                <button id="startGame" onClick={startGame}>Start Game!</button> <br/>
                 Opponent: {otherPlayerName}
             </div>
             
             :
-            <div>
+            <div id="lobbyWaiting">
                 Waiting for the game to start!
             </div>
 
