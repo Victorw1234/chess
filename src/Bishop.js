@@ -32,8 +32,6 @@ class Bishop {
 
             x1--;
             y1++;
-            console.table(board)
-            console.log({x:x1,y:y1})
             if (board[y1][x1] !== '') {// piece in the way of bishop way.
                 if (board[y1][x1].charAt(0) === color) { // friendly piece
                     break;
