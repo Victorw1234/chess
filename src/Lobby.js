@@ -1,7 +1,10 @@
 import React,{useEffect,useState} from 'react'
 import cryptoRandomString from 'crypto-random-string';
+import LobbyOwner from './LobbyOwner';
 import { HubConnectionBuilder } from '@microsoft/signalr';
+import LobbyWaiting from './LobbyWaiting';
 import ChessBoard from './ChessBoard';
+import NameInput from './NameInput';
 export default function Lobby(props) {
 
     
@@ -16,6 +19,8 @@ export default function Lobby(props) {
 
 
     useEffect(() => {
+        // if url parameters are empty, u create a game id
+        // if u have url parameters, you are expected to join that game
         if (props.match.params.id === undefined) {
             setGameId(cryptoRandomString({length : 10}))
         }
@@ -56,27 +61,6 @@ export default function Lobby(props) {
         }
     },[connection])
 
-    function nameInputField(e) {
-        setName(e.target.value)
-    }
-    
-    async function sendForm(e) {
-        console.log(connection)
-        if (connection) {
-
-            setFormSent(true)
-            if (props.match.params.id === undefined) {
-                console.log("Invoking poop")
-                console.log(await connection.invoke("JoinRoom",name,gameId))
-            }
-            else {
-                console.log(await connection.invoke("JoinRoom",name,gameId))
-            }
- 
-        }
-        
-    }
-
     async function startGame(e) {
         if (otherPlayerName !== null) {
             if (connection) {
@@ -96,27 +80,22 @@ export default function Lobby(props) {
                                            otherPlayerName={otherPlayerName}
                                            color={color}/> :
         formSent === false ? 
-        <div id="nameInput">
-            <h2>Enter name:</h2>
-            <input value={name} onChange={nameInputField} type="text">
-
-            </input>
-            <input type="submit" onClick={sendForm} value="Enter"/>
-        </div>
+        <NameInput setName={setName}
+                   connection={connection}
+                   setFormSent={setFormSent}
+                   name={name}
+                   urlParameters={props.match.params}
+                   gameId={gameId}/>
         :
             props.match.params.id === undefined ? 
-            <div id="lobbyOwner">
-                <h2>your name: {name}</h2>
-                <h3>Invite a friend!</h3>
-                <input id="url" type="text" value={url+"/" + gameId}/><br/>
-                <button id="startGame" onClick={startGame}>Start Game!</button> <br/>
-                Opponent: {otherPlayerName}
-            </div>
-            
+            <LobbyOwner name={name}
+                        url={url}
+                        gameId={gameId}
+                        startGame={startGame}
+                        otherPlayerName={otherPlayerName}
+                        />
             :
-            <div id="lobbyWaiting">
-                Waiting for the game to start!
-            </div>
+            <LobbyWaiting/>
 
 
     )
