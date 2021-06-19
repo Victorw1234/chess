@@ -166,6 +166,73 @@ class King {
         return true;
     }
 
+    static isStaleMated(board,color) {
+        var kingPos = ChessFunctions.findPieceOnBoard(board,color+'k')[0];
+        if (this.isKingChecked(board,kingPos.x,kingPos.y)) {
+            return false;
+        }
+
+        var pawns = ChessFunctions.findPieceOnBoard(board,color+'p');
+        var rooks = ChessFunctions.findPieceOnBoard(board,color+'r')
+        var horses = ChessFunctions.findPieceOnBoard(board,color+'h')
+        var bishops = ChessFunctions.findPieceOnBoard(board,color+'b')
+        var queen = ChessFunctions.findPieceOnBoard(board,color+'q')
+
+        for (var i = 0 ; i < pawns.length ; i++) {
+            var pawnLegalMoves = Pawn.legalMoves(board,pawns[i].x,pawns[i].y);
+            for (var j = 0 ; j < pawnLegalMoves.length ; j++) {
+                if (!King.movePutsKingInCheck(board,pawns[i].x,pawns[i].y,pawnLegalMoves[j].x,pawnLegalMoves[j].y)) {
+                    return false;
+                }
+            }
+        }
+
+        for (var i = 0 ; i < rooks.length ; i++) {
+            var rookLegalMoves = Rook.legalMoves(board,rooks[i].x,rooks[i].y);
+            for (var j = 0 ; j < rookLegalMoves.length ; j++) {
+                if (!King.movePutsKingInCheck(board,rooks[i].x,rooks[i].y,rookLegalMoves[j].x,rookLegalMoves[j].y)) {
+                    return false;
+                }
+            }
+        }
+
+        for (var i = 0 ; i < horses.length ; i++) {
+            var knightLegalMoves = Knight.legalMoves(board,horses[i].x,horses[i].y);
+            for (var j = 0 ; j < knightLegalMoves.length ; j++) {
+                if (!King.movePutsKingInCheck(board,horses[i].x,horses[i].y,knightLegalMoves[j].x,knightLegalMoves[j].y)) {
+                    return false;
+                }
+            }
+        }
+
+        for (var i = 0 ; i < bishops.length ; i++) {
+            var bishopLegalMoves = Bishop.legalMoves(board,bishops[i].x,bishops[i].y);
+            for (var j = 0 ; j < bishopLegalMoves.length ; j++) {
+                if (!King.movePutsKingInCheck(board,bishops[i].x,bishops[i].y,bishopLegalMoves[j].x,bishopLegalMoves[j].y)) {
+                    return false;
+                }
+            }
+        }
+
+        for (var i = 0 ; i < queen.length ; i++) {
+            var queenLegalMoves = Queen.legalMoves(board,queen[i].x,queen[i].y);
+            for (var j = 0 ; j < queenLegalMoves.length ; j++) {
+                if (!King.movePutsKingInCheck(board,queen[i].x,queen[i].y,queenLegalMoves[j].x,queenLegalMoves[j].y)) {
+                    return false;
+                }
+            }
+        }
+
+        var kingLegalMoves = King.legalMoves(board,kingPos.x,kingPos.y);
+        for (var i = 0 ; i < kingLegalMoves.length ; i++) {
+            if (!King.movePutsKingInCheck(board,kingPos.x,kingPos.y,kingLegalMoves[i].x,kingLegalMoves[i].y)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     static legalMoves(board,x,y) {
         var legalMoves = []
         var color = board[y][x].charAt(0);

@@ -3,7 +3,7 @@ import Lobby from './Lobby';
 function App() {
   return (
     <>
-    <div class="header">Chess    </div>
+    <div className="header">Chess    </div>
       <div className="App">
         {/*only using react router for parameter
           in url*/}
@@ -14,7 +14,7 @@ function App() {
           </Switch>
         </BrowserRouter>
       </div>
-      <div class="footer">Made by: <a href="https://github.com/victorw1234"> github </a></div>
+      <div className="footer">Made by: <a href="https://github.com/victorw1234"> github </a></div>
     </>
   );
 }

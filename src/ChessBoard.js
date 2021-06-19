@@ -16,14 +16,23 @@ export default function ChessBoard(props) {
 
 
     const [board,setBoard] = useState([
-        ['br','bh','bb','bq','bk','bb','bh','br'],
+        /*['br','bh','bb','bq','bk','bb','bh','br'],
         ['bp','bp','bp','bp','bp','bp','bp','bp'],
         ['','','','','','','',''],
         ['','','','','','','',''],
         ['','','','','','','',''],
         ['','','','','','','',''],
         ['wp','wp','wp','wp','wp','wp','wp','wp'],
-        ['wr','wh','wb','wq','wk','wb','wh','wr']
+        ['wr','wh','wb','wq','wk','wb','wh','wr']*/
+        ['','','','','','','',''],
+        ['','','','','','','',''],
+        ['','','','','','','',''],
+        ['','','','','','','',''],
+        ['','bq','bk','','','','',''],
+        ['','','','','','','',''],
+        ['','','','','','','',''],
+        ['wk','','','','','','','']
+
     ])
 
     const [highlightedPiece,setHighlightedPiece] = useState({x:null,y:null});
@@ -33,6 +42,8 @@ export default function ChessBoard(props) {
     const [yourColor,setYourColor] = useState(props.color)
 
     const [checkmated,setCheckmated] = useState(null)
+
+    const [stalemated,setStalemated] = useState(false)
     
     useEffect(() => {
         const newConnection = new HubConnectionBuilder()
@@ -88,8 +99,11 @@ export default function ChessBoard(props) {
             setToMove(yourColor)
         }
 
-    
-
+        if (King.isStaleMated(board,yourColor)) {
+            console.log("The game ended in a stalemate")
+            setStalemated(true)
+        }
+        
     }
     //Checks the values of the objects, instead of reference(like include would do)
     // Only works with x,y objs
@@ -222,6 +236,11 @@ export default function ChessBoard(props) {
                 else {
                     console.log('no mate')
                 }
+
+                // stalemate check
+                if (King.isStaleMated(board,color)) {
+                    console.log("The game ended in a stalemate")
+                }
             }
         }
     }
@@ -250,6 +269,7 @@ export default function ChessBoard(props) {
         <div id="chess">
             <div id="otherPlayer">
                 {checkmated === props.otherPlayerName ? <span>{props.otherPlayerName} just got checkmated!</span> : <>{props.otherPlayerName}</>}
+                {stalemated === true ? <span> Stalemate!</span> : <></>}
             </div>
             <div id={yourColor} className="ChessBoard">
                 {boardJSX}
@@ -257,6 +277,7 @@ export default function ChessBoard(props) {
             <div id="player">
                 
                 {checkmated === props.name ? <span>{props.name} just got checkmated!</span> : <>{props.name}</>}
+                {stalemated === true ? <span> Stalemate!</span> : <></>}
             </div>
             
         </div>

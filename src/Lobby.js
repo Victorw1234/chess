@@ -45,6 +45,7 @@ export default function Lobby(props) {
 
                 connection.on("joined",message => {
                     setOtherPlayerName(message)
+                    console.log(props.connection.send("BroadcastName",name,gameId))
                 })
 
                 connection.on("gameStarted",message => {
@@ -52,6 +53,10 @@ export default function Lobby(props) {
                         setColor('b')
                         setGameStarted(true)
                     }
+                })
+
+                connection.on("nameBroadcasted",message => {
+                    setOtherPlayerName(message);
                 })
 
 
@@ -65,7 +70,8 @@ export default function Lobby(props) {
         if (otherPlayerName !== null) {
             if (connection) {
                 await connection.invoke("StartGame",gameId)
-                await connection.stop();
+                await connection.stop(); // stop the connection here, the reason is because another
+                                         // connection is created on the chessboard component
                 setGameStarted(true);
 
             }
