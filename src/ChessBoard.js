@@ -16,23 +16,14 @@ export default function ChessBoard(props) {
 
 
     const [board,setBoard] = useState([
-        /*['br','bh','bb','bq','bk','bb','bh','br'],
+        ['br','bh','bb','bq','bk','bb','bh','br'],
         ['bp','bp','bp','bp','bp','bp','bp','bp'],
         ['','','','','','','',''],
         ['','','','','','','',''],
         ['','','','','','','',''],
         ['','','','','','','',''],
         ['wp','wp','wp','wp','wp','wp','wp','wp'],
-        ['wr','wh','wb','wq','wk','wb','wh','wr']*/
-        ['','','','','','','',''],
-        ['','','','','','','',''],
-        ['','','','','','','',''],
-        ['','','','','','','',''],
-        ['','bq','bk','','','','',''],
-        ['','','','','','','',''],
-        ['','','','','','','',''],
-        ['wk','','','','','','','']
-
+        ['wr','wh','wb','wq','wk','wb','wh','wr']
     ])
 
     const [highlightedPiece,setHighlightedPiece] = useState({x:null,y:null});
@@ -61,7 +52,7 @@ export default function ChessBoard(props) {
             .then(result => {
                 console.log("Connected!");
 
-                console.log(connection.invoke("JoinRoom",props.name,props.gameId))
+                console.log(connection.invoke("JoinRoomNoMessage",props.name,props.gameId))
 
                 connection.on('MoveMade',message => {
                     console.log("Move received: ")

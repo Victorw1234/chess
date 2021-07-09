@@ -44,8 +44,8 @@ export default function Lobby(props) {
                 console.log("Connected!");
 
                 connection.on("joined",message => {
+                    console.log("Sheesh")
                     setOtherPlayerName(message)
-                    console.log(props.connection.send("BroadcastName",name,gameId))
                 })
 
                 connection.on("gameStarted",message => {
@@ -56,6 +56,7 @@ export default function Lobby(props) {
                 })
 
                 connection.on("nameBroadcasted",message => {
+                    console.log("Sheesh1")
                     setOtherPlayerName(message);
                 })
 
@@ -64,11 +65,14 @@ export default function Lobby(props) {
             })
             .catch(e => console.log("connection failed"))
         }
-    },[connection])
+    },[connection,name])
 
     async function startGame(e) {
         if (otherPlayerName !== null) {
             if (connection) {
+                console.log("name")
+                console.log(name)
+                await connection.send("BroadcastName",name,gameId)
                 await connection.invoke("StartGame",gameId)
                 await connection.stop(); // stop the connection here, the reason is because another
                                          // connection is created on the chessboard component
