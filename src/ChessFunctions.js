@@ -1,6 +1,19 @@
+import Knight from './Knight'
+import Pawn from './Pawn'
+import Bishop from './Bishop'
+import Rook from './Rook'
+import Queen from './Queen'
+import King from './King'
 
 class ChessFunctions {
-
+    static pieceDictionary = {
+        'h':Knight,
+        'r':Rook,
+        'b':Bishop,
+        'k':King,
+        'q':Queen,
+        'p':Pawn
+    }
     static copy2DArrayByValue(src) {
         var arr = [[],[],[],[],[],[],[],[]]
         for (var i = 0 ; i < src.length ; i++) {
